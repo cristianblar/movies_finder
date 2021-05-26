@@ -15,6 +15,7 @@ function App(props) {
       <Switch>
         <Route exact path="/">
           <Buscador
+            favoriteMovies={props.movies}
             moviesLoaded={props.moviesLoaded}
             getMovies={props.getMovies}
             addMovieFavorite={props.addMovieFavorite}

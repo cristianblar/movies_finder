@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import './Buscador.css';
 
 export default class Buscador extends Component {
   constructor(props) {
@@ -24,46 +23,75 @@ export default class Buscador extends Component {
   render() {
     const { title } = this.state;
     return (
-      <div>
-        <h2>Buscador</h2>
-        <form className="form-container" onSubmit={(e) => this.handleSubmit(e)}>
-          <div>
-            <label className="label" htmlFor="title">
-              Película:{' '}
-            </label>
+      <div className="pt-4 pb-4 container-fluid bg-light">
+        <h1 className="display-1">
+          Finder{' '}
+          <span role="img" aria-label="magnifier">
+            🔍
+          </span>
+        </h1>
+        <form onSubmit={(e) => this.handleSubmit(e)}>
+          <div className="form-floating mb-3">
             <input
+              className="form-control pe-4"
               type="text"
-              id="title"
+              id="floatingInput"
               autoComplete="off"
+              required
               value={title}
               onChange={(e) => this.handleChange(e)}
             />
+            <label htmlFor="floatingInput">Movie</label>
           </div>
-          <button type="submit">BUSCAR</button>
+          <button className="btn btn-primary btn-lg mb-4" type="submit">
+            SEARCH
+          </button>
         </form>
-        <div className="list-container">
-          <ul>
+        <div className="container-fluid">
+          <ul className="list-unstyled">
             {this.props.moviesLoaded.length !== 0 &&
               this.props.moviesLoaded[0].hasOwnProperty('Response') && (
-                <li>¡No hubo resultados!</li>
+                <li className="text-danger">No movies found!</li>
               )}
             {this.props.moviesLoaded.length !== 0 &&
               !this.props.moviesLoaded[0].hasOwnProperty('Response') &&
               this.props.moviesLoaded.map((movie) => {
                 return (
-                  <li key={movie.imdbID}>
-                    <Link to={`/movie/${movie.imdbID}`}>{movie.Title}</Link>
-                    <button
-                      onClick={(e) =>
-                        this.handleAdd(e, {
-                          title: movie.Title,
-                          id: movie.imdbID,
-                        })
-                      }
-                    >
-                      ♥
-                    </button>
-                  </li>
+                  <div key={movie.imdbID} className="container-fluid">
+                    <div className="row mb-3">
+                      <div className="col-8">
+                        <li>
+                          <Link
+                            className="link-secondary"
+                            to={`/movie/${movie.imdbID}`}
+                          >
+                            {movie.Title}
+                          </Link>
+                        </li>
+                      </div>
+                      <div className="col-4">
+                        <button
+                          disabled={
+                            this.props.favoriteMovies.find(
+                              (peli) => movie.imdbID === peli.id
+                            )
+                              ? true
+                              : false
+                          }
+                          type="button"
+                          className="btn btn-dark btn-sm"
+                          onClick={(e) =>
+                            this.handleAdd(e, {
+                              title: movie.Title,
+                              id: movie.imdbID,
+                            })
+                          }
+                        >
+                          ♥
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 );
               })}
           </ul>
